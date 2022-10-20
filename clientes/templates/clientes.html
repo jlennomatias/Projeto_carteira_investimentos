@@ -1,0 +1,108 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block 'head' %}
+    <link rel="stylesheet" href="{% static 'clientes/css/clientes.css' %}">
+{% endblock %}
+
+{% block 'dashboard' %}
+    <div class="container">
+        <div class="row">
+            <div onclick="exibir_form('1')" class="col-md card-dashboard">
+                <p class="text-card">Adicionar ativo</p>
+            </div>
+
+            <div onclick="exibir_form('2')" class="col-md card-dashboard">
+                <p class="text-card">Atualizar ativo</p>
+            </div>
+        </div>
+
+            {% include 'partials/alertas.html' %}
+            <div id="add_cliente" class="adicionar-cliente">
+                <form action="{% url 'clientes' %}" method="POST">{% csrf_token %}
+                    <div class="row">
+                        <div class="col-md">
+                            <p>Nome:</p>
+                            <input type="text" class="form-control" placeholder="Primeiro nome" name="nome" value="{{nome}}">
+                        </div>
+                        <div class="col-md">
+                            <p>Sobrenome:</p>
+                            <input type="text" class="form-control" placeholder="Sobrenome" name="sobrenome" value="{{sobrenome}}">
+                        </div>
+                    </div>
+                    <br>
+                    <p>E-mail:</p>
+                    <input type="email" class="form-control" placeholder="nome@email.com" name="email" value="{{email}}">
+                    <br>
+                    <p>CPF:</p>
+                    <input type="text" class="form-control" placeholder="___.___.___-__" name="cpf" value="{{cpf}}">
+                    <hr style="background-color:gray;">
+                    <div class="add-ativos">
+                        <h3>Ativos</h3>
+                        <span class="btn-add-ativos" onclick="add_ativo()">+ Adicionar um ativo</span>
+                        #TODO remover ativos
+                        <div id="form-ativo">
+                            {% for codigo_ativo, quantidade_ativos, preco, operacao, data_operacao in carteira %}
+                                <br>
+                                <div class="row">
+                                    <div class="col-md">
+                                        <input type='text' placeholder='Ativo' class='form-control' name='codigo_ativo' value={{codigo_ativo}} >
+                                    </div>
+                                    <div class="col-md">
+                                        <input type='text' placeholder='Quantidade' class='form-control' name='quantidade_ativos' value={{quantidade_ativos}} >
+                                    </div>
+                                    <div class="col-md">
+                                        <input type='number' step='0.01' placeholder='Preço' class='form-control' name='preco' value={{preco}} >
+                                    </div>
+                                    <div class="col-md">
+                                        <input type='text' placeholder='Operação' class='form-control' name='operacao' value={{operacao}} >
+                                    </div>
+                                    <div class="col-md">
+                                        <input type='date' placeholder='Data da operação' class='form-control' name='data_operacao' value={{data_operacao}} >
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        </div>
+
+                    </div>
+
+                    <br>
+                    <input type="submit" value="Cadastrar" class="btn-principal">
+
+                </form>
+            </div>
+
+            <div id="att_cliente">
+                <p></p>
+                <select id="cliente-select" onchange="dados_cliente()" class="form-control">
+                    <option value=""></option>
+                    {% for cliente in clientes %}
+                    <option value="{{cliente.id}}">{{cliente.nome}}</option>
+                    {% endfor %}
+                </select>
+                <br>
+                <hr>
+
+                <div id="form-att-cliente">
+                    <input type="hidden" id="id">
+                    <p>Nome:</p>
+                    <input id="nome" type="text" class='form-control'>
+                    <p>Sobrenome:</p>
+                    <input id="sobrenome" type="text" class='form-control'>
+                    <p>E-mail:</p>
+                    <input id="email" type="text" class='form-control'>
+                    <p>CPF:</p>
+                    <input id="cpf" type="text" class='form-control'>
+                    <br>
+                    <input onclick="update_cliente()"  type="submit" value="salvar" class="btn btn-success" > 
+                    <hr style="background-color: gray;">
+                    <h2>Ativos</h2>
+                    <div id="ativos">
+                        
+                    </div>
+                </div>
+            </div>
+        
+    </div>
+    <script src="{% static 'clientes/js/clientes.js' %}"></script>
+{% endblock %}
